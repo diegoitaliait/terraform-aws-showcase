@@ -31,12 +31,12 @@ resource "aws_instance" "micro_base_test" {
   instance_type = "t2.micro"
 
   tags = {
-    Name = "micro_base_test"
+    Name = "micro_base_one"
   }
 }
 
 resource "aws_sqs_queue" "terraform_queue" {
-  name                      = "terraform-queue-base-example"
+  name                      = "terraform-queue-base-one-example"
   delay_seconds             = 90
   max_message_size          = 2048
   message_retention_seconds = 86400
