@@ -36,7 +36,7 @@ resource "aws_instance" "vm" {
     Name        = local.ec2_instance_name
     Environment = var.env
     so          = var.os
-    my_number   = var.my_number
+    my_number_gt_7   = var.my_number_gt_7
     my_bool     = var.my_bool
   }
 }
