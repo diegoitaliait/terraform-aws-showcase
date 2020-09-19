@@ -15,21 +15,22 @@ variable "os" {
   type        = string
 }
 
-variable "my_number_gt_7" {
+variable "my_number" {
   description = "This variable can be only a number"
   default     = 7
   type        = number
-
-  validation {
-    condition     = var.my_number_gt_7 >= 7 
-    error_message = "the number must be greater than or equal to 7"
-  }
 }
 
 variable "my_bool" {
   description = "This variable can be only a boolean"
   default     = false
   type        = bool
+}
+
+variable "my_default_variable" {
+  description = "This variable can be only a boolean"
+  default     = false
+  type        = string
 }
 
 ### LOCALS

@@ -1,1 +1,1 @@
-env = "default"
+my_default_variable = "default"
