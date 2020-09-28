@@ -1,5 +1,5 @@
 provider "aws" {
-  version = "2.40.0"
+  version = "2.70.0"
 }
 
 # DATA
@@ -36,6 +36,8 @@ resource "aws_instance" "vm" {
     Name        = local.ec2_instance_name
     Environment = var.env
     so          = var.os
+    my_number   = var.my_number
+    my_bool     = var.my_bool
   }
 }
 
