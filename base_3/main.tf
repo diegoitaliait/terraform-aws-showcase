@@ -33,13 +33,8 @@ data "aws_ami" "amazon_linux_ami" {
 resource "aws_instance" "single_vm" {
   ami             = data.aws_ami.amazon_linux_ami.id
   instance_type   = var.instance_type
-  instance_state  = "terminated"
 
-  tags = {
-    Name        = local.ec2_instance_name
-    Environment = var.env
-    os          = var.os
-  }
+  tags = var.single_vm_tags
 }
 
 resource "aws_instance" "multiple_vm_simple" {
@@ -47,14 +42,24 @@ resource "aws_instance" "multiple_vm_simple" {
   count             = length(var.multiple_ec2_vm_simple)
   ami               = data.aws_ami.amazon_linux_ami.id
   instance_type     = var.instance_type
-  instance_state    = "terminated"
-  metadata_options  = var.multiple_ec2_vm_simple_matadata_options
 
   tags = {
     Name        = "${local.ec2_instance_name}_${var.multiple_ec2_vm_simple[count.index]}"
     Environment = var.env
     os          = var.os
   }
+}
+
+resource "aws_instance" "multiple_ec2_vm_complex" {
+
+  count             = length(var.multiple_ec2_vm_with_validation)
+  ami               = data.aws_ami.amazon_linux_ami.id
+  instance_type     = var.multiple_ec2_vm_with_validation[count.index].instance_type
+
+  tags = merge(
+          {"Name":"${local.ec2_instance_name}_${var.multiple_ec2_vm_with_validation[count.index].name}"},
+          var.multiple_ec2_vm_with_validation[count.index].tags
+         )
 }
 
 ################################################

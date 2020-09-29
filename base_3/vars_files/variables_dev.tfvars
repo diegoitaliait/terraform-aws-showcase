@@ -1,13 +1,18 @@
 env = "dev"
 instance_type = "t2.micro"
 os = "Linux"
-multiple_ec2_vm_simple = ["one", "two"]
-multiple_ec2_vm_simple_matadata_options = {
-  "http_tokens" = "required"
-  "http_put_response_hop_limit" = "1"
+
+single_vm_tags = {
+  "os" : "Linux",
+  "type": "Simple",
+  "Name": "Simple"
 }
+
+multiple_ec2_vm_simple = ["one", "two"]
+
 multiple_ec2_vm_with_validation = [
   {
+    "name" : "foo_complex",
     "instance_type" : "t2.micro",
     "instance_state" : "terminated",
     "tags" : {
@@ -17,6 +22,7 @@ multiple_ec2_vm_with_validation = [
     }
   },
   {
+    "name" : "bar_complex",
     "instance_type" : "t2.micro",
     "instance_state" : "shutting-down",
     "tags" : {
