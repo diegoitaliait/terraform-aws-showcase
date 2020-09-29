@@ -44,6 +44,30 @@ variable "multiple_ec2_vm_with_validation" {
   )
 }
 
+################################################
+######### Dynamic Attributes ###################
+################################################
+
+variable "dynamodb" {
+  description = "DynamoDB Object"
+  type        = object({
+      name = string
+      billing_mode = string
+      read_capacity = number
+      write_capacity = number
+      hash_key = string
+      range_key = string
+      attributes = list(
+        object({
+          name = string
+          type = string
+        })
+      )
+      tags = map(any)
+  })
+}
+
+
 ### LOCALS
 
 locals {

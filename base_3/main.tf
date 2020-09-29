@@ -66,33 +66,24 @@ resource "aws_instance" "multiple_ec2_vm_complex" {
 ######### Dynamic Attributes ###################
 ################################################
 
-# resource "aws_dynamodb_table" "dynamodb_table" {
-#   name           = local.dynamodb_table_name
-#   billing_mode   = var.table_billing_mode
-#   read_capacity  = var.table_read_capacity
-#   write_capacity = var.table_write_capacity
-#   hash_key       = var.table_hash_key
-#   range_key      = var.table_range_key
+resource "aws_dynamodb_table" "dynamodb_table" {
+  name           = "${var.env}_${var.dynamodb.name}"
+  billing_mode   = var.dynamodb.billing_mode
+  read_capacity  = var.dynamodb.read_capacity
+  write_capacity = var.dynamodb.write_capacity
+  hash_key       = var.dynamodb.hash_key
+  range_key      = var.dynamodb.range_key
 
-#   dynamic "attribute" {
-#     for_each = var.table_indexed_attributes
-#     content {
-#       name = attribute.value["name"]
-#       type = attribute.value["type"]
-#     }
-#   }
+  dynamic "attribute" {
+    for_each = var.dynamodb.attributes
+    content {
+      name = attribute.value["name"]
+      type = attribute.value["type"]
+    }
+  }
 
-#   # ttl = var.ttl
-#   dynamic "ttl" {
-#     for_each = var.ttl
-#     content {
-#       attribute_name  = ttl.value["attribute_name"]
-#       enabled         = ttl.value["enabled"]
-#     }
-#   }
-
-#   tags = var.tags
-# }
+  tags = var.dynamodb.tags
+}
 
 ################################################
 ######### xxxxxxxxxxxxxxxxxx ###################

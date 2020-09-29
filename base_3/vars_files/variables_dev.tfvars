@@ -33,4 +33,26 @@ multiple_ec2_vm_with_validation = [
   }
 ]
 
+dynamodb = {
+  "name" = "my_dynamo_table"
+  "billing_mode" = "PROVISIONED"
+  "read_capacity" = 20
+  "write_capacity" = 20
+  "hash_key" = "UserId"
+  "range_key" = "GameTitle"
+  "attributes" = [
+    {
+      "name": "UserId",
+      "type": "S"
+    },
+    {
+      "name": "GameTitle",
+      "type": "S"
+    }
+  ]
+  "tags": {
+    "tag_value": "my_value"
+  }
+}
+
 
