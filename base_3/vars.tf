@@ -21,24 +21,15 @@ variable "single_vm_tags" {
 
 variable "multiple_ec2_vm_simple" {
   description = "Multiple ec2 vms, with a simple iteration"
-  default     = []
   type        = list
 }
 
-variable "multiple_ec2_vm_simple_metadata_options" {
-  description = "Multiple ec2 vms, with a simple iteration"
-  default     = {}
-  type        = map
-}
-
-variable "multiple_ec2_vm_with_validation" {
+variable "multiple_ec2_vm_complex_data" {
   description = "Multiple ec2 vms, with a complex data structure and type validation"
-  default     = []
   type        = list(
     object({
       name = string
       instance_type = string
-      instance_state = string
       tags = map(any)
     })
   )
