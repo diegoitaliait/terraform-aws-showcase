@@ -1,11 +1,11 @@
-env = "dev"
+env = "prod"
 instance_type = "t2.micro"
 os = "Linux"
 
 single_vm_tags = {
   "os" : "Linux",
   "type": "Very Simple",
-  "Name": "dev_simple"
+  "Name": "prod_simple"
 }
 
 multiple_ec2_vm_simple = ["one", "two"]

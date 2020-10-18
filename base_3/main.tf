@@ -2,6 +2,14 @@ provider "aws" {
   version = "2.70.0"
 }
 
+provider "null" {
+  version = "3.0.0"
+}
+
+terraform {
+  required_version = ">= 0.12.9"
+}
+
 ################################################
 ######### Multiple Resources ###################
 ################################################
@@ -52,13 +60,13 @@ resource "aws_instance" "multiple_vm_simple" {
 
 resource "aws_instance" "multiple_ec2_vm_complex" {
 
-  count             = length(var.multiple_ec2_vm_with_validation)
+  count             = length(var.multiple_ec2_vm_complex_data)
   ami               = data.aws_ami.amazon_linux_ami.id
-  instance_type     = var.multiple_ec2_vm_with_validation[count.index].instance_type
+  instance_type     = var.multiple_ec2_vm_complex_data[count.index].instance_type
 
   tags = merge(
-          {"Name":"${local.ec2_instance_name}_${var.multiple_ec2_vm_with_validation[count.index].name}"},
-          var.multiple_ec2_vm_with_validation[count.index].tags
+          {"Name":"${local.ec2_instance_name}_${var.multiple_ec2_vm_complex_data[count.index].name}"},
+          var.multiple_ec2_vm_complex_data[count.index].tags
          )
 }
 
@@ -85,12 +93,40 @@ resource "aws_dynamodb_table" "dynamodb_table" {
   tags = var.dynamodb.tags
 }
 
+resource "null_resource" "command_trigger_by_dynamodb" {
+
+  triggers = {
+    dynamodb_changed = aws_dynamodb_table.dynamodb_table.id
+  }
+
+  provisioner "local-exec" {
+    command = "echo 'A New DynamoDB Born, you can run an Ansible command' > output_dynamodb_trigger.txt"
+  }
+}
+
 ################################################
-######### xxxxxxxxxxxxxxxxxx ###################
+######### SNS TOPIC          ###################
+################################################
+
+resource "aws_sns_topic" "sns_one" {
+  depends_on = [
+    aws_instance.single_vm
+  ]
+
+  name = "${var.env}-terraform-sns-base"
+  delivery_policy = file("policy/sns/sns_${var.env}.json") #only static files, for dynamic use local_file
+}
+
+################################################
+######### SQS QUEUE          ###################
 ################################################
 
 resource "aws_sqs_queue" "terraform_queue" {
-  name                      = "terraform-queue-base-${var.env}"
+  depends_on = [
+    aws_instance.single_vm
+  ]
+
+  name                      = "${var.env}-terraform-queue-base"
   delay_seconds             = 90
   max_message_size          = 2048
   message_retention_seconds = 86400
@@ -98,5 +134,10 @@ resource "aws_sqs_queue" "terraform_queue" {
 
   tags = {
     Environment = var.env
+  }
+
+  #https://www.terraform.io/docs/provisioners/local-exec.html
+  provisioner "local-exec" {
+    command = "echo ${aws_sqs_queue.terraform_queue.arn} > output_queue_arn.txt"
   }
 }
