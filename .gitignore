@@ -1,4 +1,5 @@
 terraform-aws-export.sh
+base_3/*.txt
 .history
 
 # Local .terraform directories
